@@ -1,0 +1,8 @@
+torch>=2.0
+torch-geometric>=2.3
+numpy
+pandas
+scipy
+scikit-learn
+tensorboard
+matplotlib
