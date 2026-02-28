@@ -2,35 +2,18 @@
 
 Official implementation of **"Robust and efficient dual-graph neural networks for structural damage detection and localization"**, published in *Engineering Structures*, Volume 343, 2025, Article 121265.
 
-## Architecture
+## Methodology
 
-```
-Raw sensor signals (B, num_sensors, history)
-        |
-   1D-CNN backbone (4 layers)
-        |
-        v
-   (B, num_sensors, 200)
-       / \
-      /   \
-  H-GC    V-GC
-  branch  branch
-     |      |
-     v      v
-  Adaptive  LGFM
-  Aggreg.   (temporal
-  (spatial)  gating)
-     |      |
-     +--SE--+  (cross-branch squeeze-and-excitation attention)
-        |
-   Classifier
-        |
-   damage class
-```
+<p align="center">
+  <img src="DualGraphSHM.png" alt="DualGraphSHM methodology" width="800">
+</p>
 
-- **Horizontal branch (H-GC)**: Multi-scale Chebyshev GCN with learned + spatial adjacency fusion
-- **Vertical branch (V-GC)**: LSTM-gated temporal GCN across time segments
-- **SE Fusion**: Dual squeeze-and-excitation cross-attention between branches
+The proposed framework consists of five key stages:
+1. **Signal Preprocessing & 1D-CNN Feature Extraction** — Raw multi-sensor vibration signals are segmented into windows and passed through a 4-layer 1D-CNN backbone to extract per-sensor feature representations.
+2. **Adaptive Fusion of Adjacency Matrices** — A static graph (physical sensor topology) and a feature-based graph (learned via cosine similarity) are fused using Frobenius-norm weighting.
+3. **Horizontal Graph Convolution Module (H-GC)** — Multi-scale Chebyshev GCN captures spatial correlations across sensors at multiple neighbourhood hops.
+4. **Vertical Graph Convolution Module (V-GC)** — LSTM-gated temporal GCN processes feature segments across time steps with forget-gate connections.
+5. **SE Attention Fusion & Classification** — Dual squeeze-and-excitation cross-attention fuses the two branches, followed by a linear classifier for damage state prediction.
 
 ## Requirements
 
